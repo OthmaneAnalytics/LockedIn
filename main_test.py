@@ -1,51 +1,39 @@
 import random
-import time
 from main import *
 
 run_cases = [
-    (10, "Patrick Bateman", "Paul Allen"),
-    (100, "Paul Allen", "Paul Allen"),
-    (1000, "Paul Allen", "Paul Allen"),
-    (10000, "Patrick Bateman", "Paul Allen"),
+    (5, "Blake#0", "Carrell#14"),
+    (10, "Ricky#1", "Vennett#29"),
 ]
 
 submit_cases = run_cases + [
-    (12000, "Paul Allen", "Paul Allen"),
+    (15, "Shelley#2", "George#42"),
 ]
 
 
-def test(num_items, first_item, last_item):
-    print("---------------------------------")
-    print(f"Adding {num_items} job candidates to a linked list's head")
-    linked_list = LinkedList()
-    timeout = 1
-    start = time.time()
-    for item in get_items(num_items):
-        linked_list.add_to_head(Node(item))
-
-    print(f"Adding {num_items} job candidates to a linked list's tail")
-    linked_list2 = LinkedList()
-    for item in get_items(num_items):
-        linked_list2.add_to_tail(Node(item))
-    end = time.time()
-
-    print(f"Expecting to complete in less than {timeout * 1000} milliseconds")
-    if (end - start) < timeout:
-        print(f"Test completed in less than {timeout * 1000} milliseconds!")
-    else:
-        print("Fail")
-        print(f"Test took too long ({(end - start) * 1000} milliseconds). Speed it up!")
+def test(num_users, min_user, max_user):
+    users = get_users(num_users)
+    bst = BSTNode()
+    for user in users:
+        bst.insert(user)
+    print("=====================================")
+    print("Tree:")
+    print("-------------------------------------")
+    print_tree(bst)
+    print("-------------------------------------\n")
+    print(f"Expected min: {min_user}, max: {max_user}")
+    try:
+        actual_min = bst.get_min()
+        actual_max = bst.get_max()
+        print(f"Actual min: {actual_min.user_name}, max: {actual_max.user_name}")
+        if actual_max.user_name == max_user and actual_min.user_name == min_user:
+            print("Pass \n")
+            return True
+        print("Fail \n")
         return False
-
-    print("\nChecking the first linked list")
-    if not check_links(linked_list, first_item, last_item, num_items):
+    except Exception as e:
+        print(f"Error: {e}")
         return False
-    print("\nChecking the second linked list")
-    if not check_links(linked_list2, last_item, first_item, num_items):
-        return False
-
-    print("\nPass")
-    return True
 
 
 def main():
@@ -64,43 +52,17 @@ def main():
     print(f"{passed} passed, {failed} failed")
 
 
-def get_items(num):
-    random.seed(1)
-    options = ["Patrick Bateman", "Paul Allen", "Evelyn Williams", "Luis Carruthers"]
-    items = []
-    for _ in range(num):
-        optionI = random.randint(0, len(options) - 1)
-        items.append(options[optionI])
-    return items
+def print_tree(bst_node):
+    lines = []
+    format_tree_string(bst_node, lines)
+    print("\n".join(lines))
 
 
-def check_links(llist, head, tail, expected_length):
-    print(f"Expected Head: {head}")
-    print(f"Actual Head: {llist.head}")
-    if head != llist.head.val:
-        print("Fail")
-        print("The linked list's head node does not have the expected value")
-        print("Check if nodes added to the head are set as the new head node")
-        return False
-    print(f"Expected Tail: {tail}")
-    print(f"Actual Tail: {llist.tail}")
-    if tail != llist.tail.val:
-        print("Fail")
-        print("The linked list's tail node does not have the expected value")
-        print("Check if nodes added to the tail are set as the new tail node")
-        return False
-
-    actual_length = 0
-    for _ in llist:
-        actual_length += 1
-    print(f"Expected Length: {expected_length}")
-    print(f"Actual Length: {actual_length}")
-    if expected_length != actual_length:
-        print("Fail")
-        print("The linked list is not the expected length of linked nodes")
-        print("Check if added nodes are set as the new head or tail")
-        return False
-    return True
+def format_tree_string(bst_node, lines, level=0):
+    if bst_node is not None:
+        format_tree_string(bst_node.right, lines, level + 1)
+        lines.append(" " * 4 * level + "> " + str(bst_node.val))
+        format_tree_string(bst_node.left, lines, level + 1)
 
 
 test_cases = submit_cases

@@ -132,3 +132,139 @@ class LinkedList:
             current = current.next
         return " -> ".join(nodes)
 
+
+class LLQueue:
+    def remove_from_head(self):
+        if self.head is None:
+            return None
+        else:
+            temp = self.head
+            self.head = self.head.next
+            if self.head is None:
+                self.tail = None
+            return temp
+
+    # don't touch below this line
+
+    def add_to_tail(self, node):
+        if self.head is None:
+            self.head = node
+            self.tail = node
+            return
+        self.tail.next = node
+        self.tail = node
+
+    def __init__(self):
+        self.tail = None
+        self.head = None
+
+    def __iter__(self):
+        node = self.head
+        while node is not None:
+            yield node
+            node = node.next
+
+    def __repr__(self):
+        nodes = []
+        for node in self:
+            nodes.append(node.val)
+        return " <- ".join(nodes)
+
+class BSTNode:
+    def __init__(self, val=None):
+        self.left = None
+        self.right = None
+        self.val = val
+
+    def insert(self, val):
+        if self.val is None:
+            self.val= val
+            return
+        if self.val > val: 
+            if self.left is None:
+                self.left = BSTNode(val)
+                return
+            else:
+                self.left.insert(val)
+                return
+        else: 
+            if self.right is None:
+                self.right = BSTNode(val)
+                return
+            else:
+                self.right.insert(val)
+                return
+
+    def get_min(self):
+        if not self.val:
+            return None
+        index = self
+        while index.left:
+            index = index.left
+        return index.val
+            
+
+    def get_max(self):
+        if not self.val:
+            return None
+        index = self
+        while index.right:
+            index = index.right
+        return index.val
+    
+import random
+       
+
+class User:
+    def __init__(self, id):
+        self.id = id
+        user_names = [
+            "Blake",
+            "Ricky",
+            "Shelley",
+            "Dave",
+            "George",
+            "John",
+            "James",
+            "Mitch",
+            "Williamson",
+            "Burry",
+            "Vennett",
+            "Shipley",
+            "Geller",
+            "Rickert",
+            "Carrell",
+            "Baum",
+            "Brownfield",
+            "Lippmann",
+            "Moses",
+        ]
+        self.user_name = f"{user_names[id % len(user_names)]}#{id}"
+
+    def __eq__(self, other):
+        return isinstance(other, User) and self.id == other.id
+
+    def __lt__(self, other):
+        return isinstance(other, User) and self.id < other.id
+
+    def __gt__(self, other):
+        return isinstance(other, User) and self.id > other.id
+
+    def __repr__(self):
+        return "".join(self.user_name)
+
+
+def get_users(num):
+    random.seed(1)
+    users = []
+    ids = []
+    for i in range(num * 3):
+        ids.append(i)
+    random.shuffle(ids)
+    ids = ids[:num]
+    for id in ids:
+        user = User(id)
+        users.append(user)
+    return users
+
+
