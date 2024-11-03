@@ -212,6 +212,39 @@ class BSTNode:
             index = index.right
         return index.val
     
+    def delete(self, val):
+        if  not self.val:
+            return 
+        elif self.val > val:
+            if self.left:
+                self.left = self.left.delete(val)
+            return self
+        elif self.val < val:
+            if self.right:
+                self.right = self.right.delete(val)
+            return self
+        else:
+            if not self.right:
+                return self.left
+            elif not self.left:
+                return self.right
+            else:
+                node = self.right
+                while node.left:
+                    node = node.left
+                self.val = node.val
+                node = node.right
+                return self
+    
+    def preorder(self, visited):
+        if self.val:
+            visited.append(self.val)
+            if self.left:
+                self.left.preorder(visited)
+            if self.right:
+                self.right.preorder(visited)
+        return visited
+
 import random
        
 
@@ -266,5 +299,6 @@ def get_users(num):
         user = User(id)
         users.append(user)
     return users
+
 
 
