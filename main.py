@@ -245,9 +245,40 @@ class BSTNode:
                 self.right.preorder(visited)
         return visited
 
+
+    def postorder(self, visited):
+        if self.val:
+            if self.left:
+                self.left.postorder(visited)
+            if self.right:
+                self.right.postorder(visited)
+            visited.append(self.val)
+        return visited
+
+    def inorder(self, visited):
+        if self.val:
+            if self.left:
+                self.left.inorder(visited)
+            visited.append(self.val)
+            if self.right:
+                self.right.inorder(visited)
+        return visited
+
+    def exists(self, val):
+        if not self.val:
+            return False
+        if self.val == val:
+            return True
+        else:
+            exist = False
+            if self.right:
+                exist = exist or self.right.exists(val)
+            if self.left:
+                exist = exist or self.left.exists(val)
+            return exist
+
 import random
        
-
 class User:
     def __init__(self, id):
         self.id = id
@@ -300,5 +331,132 @@ def get_users(num):
         users.append(user)
     return users
 
+class RBNode:
+    def __init__(self, val):
+        self.red = False
+        self.parent = None
+        self.val = val
+        self.left = None
+        self.right = None
+
+
+class RBTree:
+    def __init__(self):
+        self.nil = RBNode(None)
+        self.nil.red = False
+        self.nil.left = None
+        self.nil.right = None
+        self.root = self.nil
+
+
+
+    def insert(self, val):
+        node = RBNode(val)
+        node.left = self.nil
+        node.right = self.nil
+        node.red = True
+        node.parent = None
+        
+        parent = None
+        current = self.root
+        while current != self.nil:
+            parent = current
+            if node.val < current.val:
+                current = current.left
+            elif node.val > current.val:
+                current = current.right
+            else:
+                return
+
+        node.parent = parent
+        if parent is None:
+            self.root = node
+        else:
+            if node.parent.val < node.val:
+                parent.right = node
+            else:
+                parent.left = node
+       self.fix_insert(node)
+
+    def fix_insert(self, new_node):
+        while new_node != self.root and new_node.parent.red:
+            parent = new_node.parent
+            grandparent = parent.parent
+            if parent == grandparent.right:
+                uncle = grandparent.left
+                
+                if uncle.red:
+                    uncle.red = False
+                    grandparent.red = True
+                    new_node = grandparent
+                else:
+                    
+                    if new_node == new_node.parent.left:
+                        new_node = parent
+                        self.rotate_right(new_node)
+                    parent.red = False
+                    grandparent.red = True
+                    self.rotate_left(pivot_parent)
+            elif parent == grantdparent.left:
+                uncle = grandparent.right
+                if uncle.red:
+                    uncle.red = False
+                    parent.red = False
+                    grandparent.red = True
+                    new_node = grandparent
+                else:
+                    if new_node == new_node.parent.right:
+                        new_node = parent
+                        self.rotate_left(new_node)
+                    parent.red = False
+                    grandparent.red = True
+                    self.rotate_right(grandparent)
+        self.root.red = False
+        
+
+        
+
+    def exists(self, val):
+        curr = self.root
+        while curr != self.nil and val != curr.val:
+            if val < curr.val:
+                curr = curr.left
+            else:
+                curr = curr.right
+        return curr
+        
+    def rotate_left(self, pivot_parent):
+        if pivot_parent == self.nil or pivot_parent.right == self.nil:
+            return
+        pivot = pivot_parent.right
+        pivot_parent.right = pivot.left
+        if pivot.left != self.nil:
+            pivot.left.parent = pivot_parent
+        pivot.parent = pivot_parent.parent
+        if pivot_parent == self.root:
+            self.root = pivot
+        elif pivot_parent == pivot_parent.parent.left:
+            pivot_parent.parent.left = pivot
+        elif:
+            pivot_parent.parent.right = pivot
+        pivot.left = pivot_parent
+        pivot_parent.parent = pivot
+
+    def rotate_right(self, pivot_parent):
+        if pivot_parent == self.nil or pivot_parent.left == self.nil:
+            return
+        pivot = pivot_parent.left
+        pivot_parent.left = pivot.right
+        if pivot.right != self.nil:
+            pivot.right.parent = pivot_parent
+        pivot.parent = pivot_parent.parent
+        if pivot_parent == self.root:
+            self.root = pivot
+        elif pivot_parent == pivot_parent.parent.right:
+            pivot_parent.parent.right = pivot
+        elif:
+            pivot_parent.parent.left = pivot
+        pivot.right = pivot_parent
+        pivot_parent.parent = pivot
 
 
