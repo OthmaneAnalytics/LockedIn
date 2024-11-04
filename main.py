@@ -459,4 +459,3 @@ class RBTree:
         pivot.right = pivot_parent
         pivot_parent.parent = pivot
 
-
