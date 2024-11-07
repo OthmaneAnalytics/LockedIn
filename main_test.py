@@ -1,66 +1,41 @@
-from main import HashMap
-from user import User
-
+import json
+from main import *
 
 run_cases = [
-    (
-        512,
-        [User(1, 30, "Engineer"), User(2, 25, "Designer")],
-        [
-            ("Ricky#1", User(1, 30, "Engineer")),
-            ("Shelley#2", User(2, 25, "Designer")),
-            ("FakeyFaker#2", None),
-        ],
-    ),
+    (["dev", "devops", "designer", "director"], "de", ["dev", "devops", "designer"]),
+    (["manager", "intern"], "z", []),
+    (["cto", "cfo", "coo", "ceo"], "c", ["cto", "cfo", "coo", "ceo"]),
 ]
 
 submit_cases = run_cases + [
     (
-        1028,
-        [User(4, 36, "Clerk"), User(5, 29, "Chef"), User(6, 55, "Pilot")],
-        [
-            ("George#4", User(4, 36, "Clerk")),
-            ("John#5", User(5, 29, "Chef")),
-            ("Blake#1", None),
-        ],
+        ["developer", "designer", "devops", "director"],
+        "de",
+        ["developer", "designer", "devops"],
     ),
 ]
 
 
-def test(size, users, expected_hashmap):
+def test(words, prefix, expected_matches):
     print("---------------------------------")
-    print(f"Inputs:")
-    print(f" * HashMap size: {size}")
-    hm = HashMap(size)
-    for user in users:
-        hm.insert(user.user_name, user)
-        print(f"   * Inserted ({user.user_name}, {user})")
-
-    passes = True
-    for user_name, expected in expected_hashmap:
-        try:
-            result = hm.get(user_name)
-            if result == expected:
-                print(f"Get {user_name}: Pass")
-            else:
-                print(f"Get {user_name}: Fail")
-                print(f"   * Expect: {expected}")
-                print(f"   * Actual: {result}")
-                passes = False
-        except Exception:
-            if expected is None:
-                print(f"Get {user_name}: Pass")
-            else:
-                print(f"Get {user_name}: Fail")
-                print(f"   * Expect: {expected}")
-                print(f"   * Actual: Exception")
-                passes = False
-
-    if passes:
-        print("Pass")
-        return True
-    print("Fail")
-    return False
+    print("Trie:")
+    trie = Trie()
+    for word in words:
+        trie.add(word)
+    print(json.dumps(trie.root, sort_keys=True, indent=2))
+    print(f'Words with prefix: "{prefix}":')
+    print(f"Expecting: {expected_matches}")
+    try:
+        actual = trie.words_with_prefix(prefix)
+        print(f"Actual: {actual}")
+        if sorted(actual) == sorted(expected_matches):
+            print("Pass \n")
+            return True
+        print("Fail \n")
+        return False
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
 
 
 def main():
@@ -84,6 +59,4 @@ if "__RUN__" in globals():
     test_cases = run_cases
 
 main()
-
-
 

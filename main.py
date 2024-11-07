@@ -497,7 +497,7 @@ class Trie:
             if not item in current.keys():
                 current[item] = {}
             current = current[item]
-        current[self.emd_symbol] = True
+        current[self.end_symbol] = True
 
     def exists(self, word):
         current = self.root
@@ -510,7 +510,25 @@ class Trie:
             return True
         else:
             return False
-    # don't touch below this line
+
+    def search_level(self, cur, cur_prefix, words):
+        if self.end_symbol in cur.keys():
+            words += cur_prefix
+        letters = cur.keys()
+        for letter in sorted(letters):
+            if self.end_symbol != letter:
+                words += self.search_level( cur[letter],cur_prefix + letter, words)
+        return words
+
+    def words_with_prefix(self, prefix):
+        words = []
+        content = self.root
+        for letter in prefix:
+            if letter in content.keys():
+                content = content[letter]
+            else:
+                return []
+        return self.search_level(content,prefix,words)
 
     def __init__(self):
         self.root = {}
