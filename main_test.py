@@ -1,40 +1,62 @@
-from main import *
-
-
-def populate_tree(nodes):
-    if not nodes:
-        return None
-    tree = BSTNode(nodes[0])
-    for node in nodes[1:]:
-        tree.insert(node)
-    return tree
+from main import HashMap
+from user import User
 
 
 run_cases = [
-    (5, True),
-    (3, False),
+    (
+        512,
+        [User(1, 30, "Engineer"), User(2, 25, "Designer")],
+        [
+            ("Ricky#1", User(1, 30, "Engineer")),
+            ("Shelley#2", User(2, 25, "Designer")),
+            ("FakeyFaker#2", None),
+        ],
+    ),
 ]
 
 submit_cases = run_cases + [
-    (1, True),
-    (21, False),
-    (17, False),
+    (
+        1028,
+        [User(4, 36, "Clerk"), User(5, 29, "Chef"), User(6, 55, "Pilot")],
+        [
+            ("George#4", User(4, 36, "Clerk")),
+            ("John#5", User(5, 29, "Chef")),
+            ("Blake#1", None),
+        ],
+    ),
 ]
 
 
-def test(val_to_check, expected_output):
+def test(size, users, expected_hashmap):
     print("---------------------------------")
-    users = get_users(10)
-    tree = populate_tree(users)
-    user_to_find = User(val_to_check)
-    print(f"Tree nodes:")
+    print(f"Inputs:")
+    print(f" * HashMap size: {size}")
+    hm = HashMap(size)
     for user in users:
-        print(f" * {user}")
-    print(f"Searching for: {user_to_find}")
-    print(f"Expecting: {expected_output}")
-    result = tree.exists(user_to_find)
-    print(f"Actual: {result}")
-    if result == expected_output:
+        hm.insert(user.user_name, user)
+        print(f"   * Inserted ({user.user_name}, {user})")
+
+    passes = True
+    for user_name, expected in expected_hashmap:
+        try:
+            result = hm.get(user_name)
+            if result == expected:
+                print(f"Get {user_name}: Pass")
+            else:
+                print(f"Get {user_name}: Fail")
+                print(f"   * Expect: {expected}")
+                print(f"   * Actual: {result}")
+                passes = False
+        except Exception:
+            if expected is None:
+                print(f"Get {user_name}: Pass")
+            else:
+                print(f"Get {user_name}: Fail")
+                print(f"   * Expect: {expected}")
+                print(f"   * Actual: Exception")
+                passes = False
+
+    if passes:
         print("Pass")
         return True
     print("Fail")
@@ -62,4 +84,6 @@ if "__RUN__" in globals():
     test_cases = run_cases
 
 main()
+
+
 

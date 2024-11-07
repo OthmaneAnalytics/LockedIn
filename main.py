@@ -376,7 +376,7 @@ class RBTree:
                 parent.right = node
             else:
                 parent.left = node
-       self.fix_insert(node)
+        self.fix_insert(node)
 
     def fix_insert(self, new_node):
         while new_node != self.root and new_node.parent.red:
@@ -437,7 +437,7 @@ class RBTree:
             self.root = pivot
         elif pivot_parent == pivot_parent.parent.left:
             pivot_parent.parent.left = pivot
-        elif:
+        else:
             pivot_parent.parent.right = pivot
         pivot.left = pivot_parent
         pivot_parent.parent = pivot
@@ -454,8 +454,66 @@ class RBTree:
             self.root = pivot
         elif pivot_parent == pivot_parent.parent.right:
             pivot_parent.parent.right = pivot
-        elif:
+        else:
             pivot_parent.parent.left = pivot
         pivot.right = pivot_parent
         pivot_parent.parent = pivot
+
+class HashMap:
+    def key_to_index(self, key):
+        index = 0
+        for i in range(len(key)):
+            index += ord(key[i])
+        index %= len(self.hashmap)
+        return index
+
+    def get(self, key):
+        index = self.key_to_index(key)
+        if self.hashmap[index]:
+            return self.hashmap[index][1]
+        else:
+            raise Exception("sorry, key not found")
+    # don't touch below this line
+
+    def insert(self, key, value):
+        index = self.key_to_index(key)
+        self.hashmap[index] = (key,value)
+    # don't touch below this line
+
+    def __init__(self, size):
+        self.hashmap = [None for i in range(size)]
+
+    def __repr__(self):
+        buckets = []
+        for v in self.hashmap:
+            if v != None:
+                buckets.append(v)
+        return str(buckets)
+
+class Trie:
+    def add(self, word):
+        current = self.root
+        for item in word:
+            if not item in current.keys():
+                current[item] = {}
+            current = current[item]
+        current[self.emd_symbol] = True
+
+    def exists(self, word):
+        current = self.root
+        for item in word:
+            if not item in current.keys():
+                return False
+            else:
+                current = current[item]
+        if self.end_symbol in current:
+            return True
+        else:
+            return False
+    # don't touch below this line
+
+    def __init__(self):
+        self.root = {}
+        self.end_symbol = "*"
+
 
