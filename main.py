@@ -538,17 +538,23 @@ class Graph:
     def __init__(self):
         self.graph = {}
 
+    def depth_first_search(self, start_vertex):
+        visited = []
+        self.depth_first_search_r(visited, start_vertex)
+        return visited
+
+    def depth_first_search_r(self, visited, current_vertex):
+        visited.append(current_vertex)
+        for item in sorted(self.graph[current_vertex]):
+            if not item in visited:
+                self.depth_first_search_r(visited,item)
+        
+
     def breadth_first_search(self, v):
-        print("graph ", self.graph)
-        print("starting point ", v)
         visited = []
         to_visit = [v]
         while to_visit:
-            print("visited verteces ", visited)
-            print("to visit list ", to_visit)
             visited.append(to_visit.pop())
-            print("current vartex v ", visited[-1])
-            print("neignbors of v", self.graph[visited[-1]])
             for item in sorted(self.graph[visited[-1]]):
                 if not item in visited and not item in to_visit:
                     to_visit.append(item)
