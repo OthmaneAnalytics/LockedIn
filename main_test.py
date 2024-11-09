@@ -1,37 +1,85 @@
-import json
 from main import *
 
 run_cases = [
-    (["dev", "devops", "designer", "director"], "de", ["dev", "devops", "designer"]),
-    (["manager", "intern"], "z", []),
-    (["cto", "cfo", "coo", "ceo"], "c", ["cto", "cfo", "coo", "ceo"]),
+    (
+        3,
+        [
+            (0, 1),
+            (2, 0),
+        ],
+        (
+            [
+                (1, 0),
+                (1, 2),
+                (2, 0),
+            ],
+            [True, False, True],
+        ),
+    ),
+    (
+        6,
+        [
+            (0, 1),
+            (1, 2),
+            (2, 3),
+            (3, 4),
+            (4, 5),
+        ],
+        (
+            [
+                (0, 1),
+                (1, 2),
+                (0, 4),
+                (2, 5),
+                (5, 0),
+            ],
+            [True, True, False, False, False],
+        ),
+    ),
 ]
-
 submit_cases = run_cases + [
     (
-        ["developer", "designer", "devops", "director"],
-        "de",
-        ["developer", "designer", "devops"],
+        6,
+        [
+            (0, 1),
+            (2, 4),
+            (2, 1),
+            (3, 1),
+            (4, 5),
+        ],
+        (
+            [
+                (5, 4),
+                (1, 5),
+                (0, 4),
+                (2, 5),
+                (1, 3),
+            ],
+            [True, False, False, False, True],
+        ),
     ),
 ]
 
 
-def test(words, prefix, expected_matches):
+def test(num_of_vertices, edges_to_add, edges_to_check):
+    print("=================================")
+    graph = Graph(num_of_vertices)
+    for edge in edges_to_add:
+        graph.add_edge(edge[0], edge[1])
+        print(f"Added edge: {edge}")
     print("---------------------------------")
-    print("Trie:")
-    trie = Trie()
-    for word in words:
-        trie.add(word)
-    print(json.dumps(trie.root, sort_keys=True, indent=2))
-    print(f'Words with prefix: "{prefix}":')
-    print(f"Expecting: {expected_matches}")
     try:
-        actual = trie.words_with_prefix(prefix)
-        print(f"Actual: {actual}")
-        if sorted(actual) == sorted(expected_matches):
-            print("Pass \n")
+        actual = []
+        for i, edge in enumerate(edges_to_check[0]):
+            exists = graph.edge_exists(edge[0], edge[1])
+            actual.append(exists)
+            print(f"{edge} exists:")
+            print(f" - Expecting: {edges_to_check[1][i]}")
+            print(f" - Actual: {exists}")
+        if actual == edges_to_check[1]:
+            print("Pass")
             return True
-        print("Fail \n")
+        print("Fail")
         return False
     except Exception as e:
         print(f"Error: {e}")

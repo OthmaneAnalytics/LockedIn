@@ -534,4 +534,28 @@ class Trie:
         self.root = {}
         self.end_symbol = "*"
 
+class Graph:
+    def __init__(self, num_vertices):
+        self.graph = []
+        for i in range(num_vertices):
+            self.graph.append([False for item in range(num_vertices)])
+            print(self.graph)
+
+
+    def add_edge(self, u, v):
+        print("u ", u , " v ", v)
+        self.graph[u][v], self.graph[v][u] = True , True
+
+
+    # don't touch below this line
+
+    def edge_exists(self, u, v):
+        if u < 0 or u >= len(self.graph):
+            return False
+        if len(self.graph) == 0:
+            return False
+        row1 = self.graph[0]
+        if v < 0 or v >= len(row1):
+            return False
+        return self.graph[u][v]
 
