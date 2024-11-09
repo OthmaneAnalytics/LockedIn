@@ -3,62 +3,46 @@ from main import *
 run_cases = [
     (
         [
-            (0, 1),
-            (2, 0),
+            ("New York", "London"),
+            ("New York", "Cairo"),
+            ("New York", "Tokyo"),
+            ("London", "Dubai"),
         ],
-        (
-            [
-                (1, 0),
-                (1, 2),
-                (2, 0),
-            ],
-            [True, False, True],
-        ),
-    ),
-    (
-        [
-            (0, 1),
-            (1, 2),
-            (2, 3),
-            (3, 4),
-            (4, 5),
-        ],
-        (
-            [
-                (0, 1),
-                (1, 2),
-                (0, 4),
-                (2, 5),
-                (5, 0),
-            ],
-            [True, True, False, False, False],
-        ),
+        "New York",
+        ["New York", "Cairo", "London", "Tokyo", "Dubai"],
     ),
 ]
 submit_cases = run_cases + [
     (
         [
-            (0, 1),
-            (2, 4),
-            (2, 1),
-            (3, 1),
-            (4, 5),
+            ("New York", "London"),
+            ("New York", "Cairo"),
+            ("New York", "Tokyo"),
+            ("London", "Dubai"),
+            ("Cairo", "Kyiv"),
+            ("Cairo", "Madrid"),
+            ("London", "Madrid"),
+            ("Buenos Aires", "New York"),
+            ("Tokyo", "Buenos Aires"),
+            ("Kyiv", "San Francisco"),
         ],
-        (
-            [
-                (5, 4),
-                (1, 5),
-                (0, 4),
-                (2, 5),
-                (1, 3),
-            ],
-            [True, False, False, False, True],
-        ),
+        "New York",
+        [
+            "New York",
+            "Buenos Aires",
+            "Cairo",
+            "London",
+            "Tokyo",
+            "Kyiv",
+            "Madrid",
+            "Dubai",
+            "San Francisco",
+        ],
     ),
 ]
 
 
-def test(edges_to_add, edges_to_check):
+def test(edges_to_add, starting_at, expected_visited):
     print("=================================")
     graph = Graph()
     for edge in edges_to_add:
@@ -66,17 +50,15 @@ def test(edges_to_add, edges_to_check):
         print(f"Added edge: {edge}")
     print("---------------------------------")
     try:
-        actual = []
-        for i, edge in enumerate(edges_to_check[0]):
-            exists = graph.edge_exists(edge[0], edge[1])
-            actual.append(exists)
-            print(f"{edge} exists:")
-            print(f" - Expecting: {edges_to_check[1][i]}")
-            print(f" - Actual: {exists}")
-        if actual == edges_to_check[1]:
-            print("Pass \n")
+        bfs = graph.breadth_first_search(starting_at)
+        for i, v in enumerate(bfs):
+            print(f"Visiting:  {v}")
+            print(f"Expecting: {expected_visited[i]}")
+
+        if bfs == expected_visited:
+            print("Pass")
             return True
-        print("Fail \n")
+        print("Fail")
         return False
     except Exception as e:
         print(f"Error: {e}")

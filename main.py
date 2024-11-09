@@ -537,31 +537,38 @@ class Trie:
 class Graph:
     def __init__(self):
         self.graph = {}
-        print("initial graph ", self.graph)
+
+    def breadth_first_search(self, v):
+        print("graph ", self.graph)
+        print("starting point ", v)
+        visited = []
+        to_visit = [v]
+        while to_visit:
+            print("visited verteces ", visited)
+            print("to visit list ", to_visit)
+            visited.append(to_visit.pop())
+            print("current vartex v ", visited[-1])
+            print("neignbors of v", self.graph[visited[-1]])
+            for item in sorted(self.graph[visited[-1]]):
+                if not item in visited and not item in to_visit:
+                    to_visit.append(item)
+        return visited
 
     def add_edge(self, u, v):
-        print("edge to add: u ", u, " v ", v)
         if u in self.graph.keys():
-            self.graph[u].append(v)
-            print("added u ", u, " v ", v)
-            print("initial graph ", self.graph)
+            self.graph[u].add(v)
         else:
-            self.graph[u] = [v]
-            print("create u ", u, " v ", v)
+            self.graph[u] = set([v])
         if v in self.graph.keys():
-            self.graph[v].append(u)
-            print("added v ", u, " u ", v)
-            print("initial graph ", self.graph)
+            self.graph[v].add(u)
         else:
-            self.graph[v] = [u]
-            print("create v ", v, " u ", u)
-        
-        
+            self.graph[v] = set([u])
 
-    # don't touch below this line
-
-    def edge_exists(self, u, v):
-        if u in self.graph and v in self.graph:
-            return (v in self.graph[u]) and (u in self.graph[v])
-        return False
+    def __repr__(self):
+        result = ""
+        for key in self.graph.keys():
+            result += f"Vertex: '{key}'\n"
+            for v in sorted(self.graph[key]):
+                result += f"has an edge leading to --> {v} \n"
+        return result
 
